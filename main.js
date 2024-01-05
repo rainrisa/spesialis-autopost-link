@@ -1,4 +1,4 @@
-import { Bot, webhookCallback } from "grammy";
+import { Bot, InlineKeyboard, webhookCallback } from "grammy";
 import express from "express";
 import { cleanEnv, num, str } from "envalid";
 import dotenv from "dotenv";
@@ -17,8 +17,16 @@ server.use(express.json());
 
 server.post("/link", async (req, res) => {
   const link = req.body.link;
+  const button = req.body.button;
   if (link) {
-    const message = await bot.api.sendMessage(env.CHANNEL_ID, link);
+    let replyMarkup;
+
+    if (button && button.text && button.url) {
+      replyMarkup = new InlineKeyboard().url(button.text, button.url);
+    }
+    const message = await bot.api.sendMessage(env.CHANNEL_ID, link, {
+      reply_markup: replyMarkup,
+    });
     return res.send({ message });
   }
   return res.status(500).send({ message: "Provide link" });
