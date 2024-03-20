@@ -18,6 +18,7 @@ server.use(express.json());
 server.post("/link", async (req, res) => {
   const link = req.body.link;
   const button = req.body.button;
+  const disablePreview = Boolean(req.body.disablePreview);
   if (link) {
     let replyMarkup;
 
@@ -26,6 +27,8 @@ server.post("/link", async (req, res) => {
     }
     const message = await bot.api.sendMessage(env.CHANNEL_ID, link, {
       reply_markup: replyMarkup,
+      parse_mode: "MarkdownV2",
+      disable_web_page_preview: disablePreview,
     });
     return res.send({ message });
   }
