@@ -27,7 +27,7 @@ server.post("/link", async (req, res) => {
     }
     const message = await bot.api.sendMessage(env.CHANNEL_ID, link, {
       reply_markup: replyMarkup,
-      parse_mode: "MarkdownV2",
+      parse_mode: "HTML",
       disable_web_page_preview: disablePreview,
     });
     return res.send({ message });
